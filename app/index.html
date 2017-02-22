@@ -9,12 +9,17 @@
   <!-- build:css(.) styles/vendor.css -->
   <!-- bower:css -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css(.tmp) styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
   <!-- endbuild -->
+  <link rel="stylesheet" href="scripts/vendor/toastr.scss">
+  <link rel="stylesheet" href="scripts/vendor/toastr.less">
+  <link rel="stylesheet" href="styles/angular-toast.css">
 </head>
+
 <body ng-app="angularappApp">
 <!--[if lte IE 8]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
@@ -34,30 +39,52 @@
           <span class="icon-bar"></span>
         </button>
 
-        <a class="navbar-brand" href="#!/">Hack the Planet</a>
+        <!--<a class="navbar-brand" href="#!/"></a>-->
       </div>
 
-      <div class="collapse navbar-collapse" id="js-navbar-collapse">
-
+      <div ng-controller="NavbarCtrl" class="navbar navbar-default navbar-static-top">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/"><i class="ion-ios7-pulse-strong"></i>Blok H</a>
+        </div>
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#!/">Home</a></li>
-          <li><a ng-href="#!/about">About</a></li>
-          <li><a ng-href="#!/funds">Funds</a></li>
-          <li><a ng-href="#!/contact">Contact</a></li>
+          <li><a href="/#!/">Home</a></li>
+          <li><a href="/#!/funds">Funds</a></li>
+          <li><a href="/#!/contact">Contact</a></li>
+          <li><a href="/#!/about">About</a></li>
+          <li ng-if="isAuthenticated()"><a href="/#!/profile">Profile</a></li>
+        </ul>
+        <ul ng-if="!isAuthenticated()" class="nav navbar-nav pull-right">
+          <li><a href="/#!/login">Login</a></li>
+          <li><a href="/#!/signup">Sign up</a></li>
+
+        </ul>
+        <ul ng-if="isAuthenticated()" class="nav navbar-nav pull-right">
+          <li><a href="/#!/logout">Logout</a></li>
         </ul>
       </div>
+
+      <div ui-view></div>
+      <!--<div class="collapse navbar-collapse" id="js-navbar-collapse">-->
+
+        <!--<ul class="nav navbar-nav">-->
+          <!--<li class="active"><a href="#!/">Home</a></li>-->
+          <!--<li><a ng-href="#!/about">About</a></li>-->
+          <!--<li><a ng-href="#!/funds">Funds</a></li>-->
+          <!--<li><a ng-href="#!/contact">Contact</a></li>-->
+        <!--</ul>-->
+      <!--</div>-->
     </div>
   </div>
 </div>
 
-<div class="container">
-  <div ng-view=""></div>
-</div>
+<!--<div class="container">-->
+  <!--<div ng-view=""></div>-->
+<!--</div>-->
 <feedback></feedback>
 
 <div class="footer">
   <div class="container">
-    <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+    <p><span class="glyphicon"></span> Matthijs van der Meijden</p>
   </div>
 </div>
 
@@ -75,8 +102,17 @@
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
 <script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/satellizer/dist/satellizer.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
+
+<script src="scripts/vendor/toastr.js"></script>
+
+
+<!-- Satellizer CDN -->
+<script src="https://cdn.jsdelivr.net/satellizer/0.15.5/satellizer.min.js"></script>
 
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="scripts/app.js"></script>
@@ -89,6 +125,13 @@
 <script src="scripts/directives/feedback.js"></script>
 <script src="scripts/directives/fundformat.js"></script>
 <script src="scripts/filters/contactName.js"></script>
+<script src="scripts/controllers/navbar.js"></script>
+<script src="scripts/controllers/profile.js"></script>
+<script src="scripts/controllers/login.js"></script>
+<script src="scripts/controllers/logout.js"></script>
+<script src="scripts/controllers/signup.js"></script>
+<script src="scripts/directives/passwordMatch.js"></script>
+<script src="scripts/directives/passwordStrength.js"></script>
 <!-- endbuild -->
 </body>
 </html>

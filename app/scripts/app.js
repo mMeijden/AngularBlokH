@@ -8,6 +8,30 @@
  *
  * Main module of the application.
  */
+
+/**
+ * Helper auth functions
+ */
+var skipIfLoggedIn = ['$q', '$auth', function ($q, $auth) {
+  var deferred = $q.defer();
+  if ($auth.isAuthenticated()) {
+    deferred.reject();
+  } else {
+    deferred.resolve();
+  }
+  return deferred.promise;
+}];
+
+var loginRequired = ['$q', '$location', '$auth', function ($q, $location, $auth) {
+  var deferred = $q.defer();
+  if ($auth.isAuthenticated()) {
+    deferred.resolve();
+  } else {
+    $location.path('/login');
+  }
+  return deferred.promise;
+}];
+
 angular
   .module('angularappApp', [
     'ngAnimate',
@@ -18,43 +42,115 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
+    'ui.router',
+    'satellizer',
+    'toastr',
     'angularappApp.directives',
     'angularappApp.filters'
   ])
-  .config(function ($routeProvider ) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
+  .config(function ($routeProvider, $stateProvider, $urlRouterProvider, $authProvider) {
+    $stateProvider
+      .state('main', {
+        url: '/',
         controller: 'MainCtrl',
-        controllerAs: 'main'
+        controllerAs: 'main',
+        templateUrl: 'views/main.html'
       })
-      .when('/about', {
+      .state('about', {
+        url: '/about',
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl',
         controllerAs: 'about'
       })
-      .when('/contact', {
+      .state('contact', {
+        url: '/contact',
         templateUrl: 'views/contact.html',
         controller: 'ContactCtrl',
         controllerAs: 'fund'
       })
-      .when('/funds', {
+      .state('funds', {
+        url: '/funds',
         templateUrl: 'views/funds/overview.html',
         controller: 'FundCtrl',
         controllerAs: 'fund'
       })
-      .when('/funds/:isin', {
+      .state('isin', {
+        url: '/funds/:isin',
         templateUrl: 'views/funds/details.html',
         controller: 'FundDetailCtrl',
         controllerAs: 'fundDetail'
       })
-      .otherwise({
-        redirectTo: '/'
+      .state('login', {
+        url: '/login',
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl',
+        resolve: {
+          skipIfLoggedIn: skipIfLoggedIn
+        }
+      })
+      .state('signup', {
+        url: '/signup',
+        templateUrl: 'views/signup.html',
+        controller: 'SignupCtrl',
+        resolve: {
+          skipIfLoggedIn: skipIfLoggedIn
+        }
+      })
+      .state('logout', {
+        url: '/logout',
+        template: null,
+        controller: 'LogoutCtrl'
+      })
+      .state('profile', {
+        url: '/profile',
+        templateUrl: 'views/profile.html',
+        controller: 'ProfileCtrl',
+        resolve: {
+          loginRequired: loginRequired
+        }
       });
-  });
-angular.module('angularappApp.filters', []);
-angular.module('angularappApp.directives', []);
-angularappApp.config(['$locationProvider', function($locationProvider) {
-  $locationProvider.hashPrefix('');
-}]);
+    $urlRouterProvider.otherwise('/');
+
+
+
+    $authProvider.facebook({
+      clientId: '603122136500203'
+    });
+
+
+    //   $routeProvider
+    //     .when('/', {
+    //       templateUrl: 'views/main.html',
+    //       controller: 'MainCtrl',
+    //       controllerAs: 'main'
+    //     })
+    //     .when('/about', {
+    //       templateUrl: 'views/about.html',
+    //       controller: 'AboutCtrl',
+    //       controllerAs: 'about'
+    //     })
+    //     .when('/contact', {
+    //       templateUrl: 'views/contact.html',
+    //       controller: 'ContactCtrl',
+    //       controllerAs: 'fund'
+    //     })
+    //     .when('/funds', {
+    //       templateUrl: 'views/funds/overview.html',
+    //       controller: 'FundCtrl',
+    //       controllerAs: 'fund'
+    //     })
+    //     .when('/funds/:isin', {
+    //       templateUrl: 'views/funds/details.html',
+    //       controller: 'FundDetailCtrl',
+    //       controllerAs: 'fundDetail'
+    //     })
+    //     .otherwise({
+    //       redirectTo: '/'
+    //     });
+     });
+    angular.module('angularappApp.filters', []);
+    angular.module('angularappApp.directives', []);
+    angularappApp.config(['$locationProvider', function ($locationProvider) {
+      $locationProvider.hashPrefix('');
+    }]);
 

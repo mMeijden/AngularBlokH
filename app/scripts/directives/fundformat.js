@@ -11,7 +11,8 @@ angular.module('angularappApp.directives').directive('fundOverview', function ()
     ' </tr>' +
     ' <tr ng-repeat="fund in funds">' +
     '  <td>'+
-    '   <label>{{fund.isin}}</label>' +
+    '<a ng-href="#/funds/{{fund.isin}}">{{fund.isin}}</a>' +
+   // '  <!-- <label>{{fund.isin}}</label> -->' +
     '  </td>' +
     '  <td>' +
     '   <label>{{fund.lawCountry}}</label>' +

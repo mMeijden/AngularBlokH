@@ -41,8 +41,6 @@
     "test": "karma start test\\karma.conf.js"
   },
   "dependencies": {
-    "ng-auth": "^1.0.0",
-    "satellizer": "^0.15.5",
-    "ui-router": "^1.0.0-alpha.3"
+    "ng-auth": "^1.0.0"
   }
 }
